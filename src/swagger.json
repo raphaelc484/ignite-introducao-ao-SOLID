@@ -1,0 +1,247 @@
+
+{
+    "openapi":"3.0.0",
+    "info":{
+      "title":"Chapter 02 - Challenge 02",
+      "description":"Documentation of challenge of the ignite nodeJS course ",
+      "version": "2.2"
+    },
+    "components":{
+      "schema":{
+        "createUser":{
+          "type":"object",
+          "properties":{
+            "name":{
+              "type":"string"
+            },
+            "email":{
+              "type":"string"
+            }
+          }
+        },
+        "responseUser":{
+          "type":"object",
+          "properties": {
+            "admin": {
+              "type": "boolean"
+            },
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "updated_at": {
+              "type": "string"
+            }
+          }
+        },
+        "userExample": {
+          "id": "018079bb-da37-4d38-aec0-07042e2a3192",
+          "admin": false,
+          "name": "Thiago",
+          "email": "thiago.rossato.tr@mail.com",
+          "created_at": "2021-03-18T12:00:00.000Z",
+          "updated_at": "2021-03-18T12:00:00.000Z"
+        },
+        "error":{
+          "type": "object",
+          "properties": {
+            "error": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "paths":{
+      "/users":{
+        "post":{
+          "tags":["Users"],
+          "summary":"create a user",
+          "description":"Create a new user",
+          "requestBody":{
+            "required":"true",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref":"#/components/schema/createUser",
+                  "example":{
+                    "name":"Name example",
+                    "email":"Email example"
+                  }
+  
+                }
+              }
+            }
+          },
+          "responses":{
+            "201": {
+              "description": "Created",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref":"#/components/schema/responseUser"
+                  }
+                }
+              }
+            },
+            "400":{
+              "description":"Email already exists",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string"
+                      }
+                    },
+                    "example": {
+                      "error": "Email already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "get":{
+          "tags":["List all users"],
+          "summary":"List all users",
+          "description":"List all users",
+          "parameters":[{
+              "in":"header",
+              "name":"user_id",
+              "schema":{
+                "type": "string",
+                "format": "uuid",
+                "required":"true"
+              } 
+            }
+          ],
+          "responses":{
+            "200":{
+              "description":"Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type":"array",
+                    "items":{
+                      "$ref":"#/components/schema/responseUser"
+                    }
+                  }
+                }
+              }
+            },
+            "404":{
+              "description":"User not found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref":"#/components/schema/error",
+                    "example": {
+                      "error": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/{user_id}/admin":{
+        "patch":{
+          "tags":["Turn admin"],
+          "summary":"Turn an user into admin",
+          "description":"Turn an user into admin",
+          "parameters":[{
+              "in":"path",
+              "name":"user_id",
+              "schema":{
+                "type": "string",
+                "format": "uuid",
+                "required":"true"
+              } 
+            }
+          ],
+          "responses":{
+            "200": {
+              "description": "Updated",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref":"#/components/schema/responseUser",
+                    "example":{
+                      "$ref":"#/components/schema/userExample"
+                    }
+                  }
+                }
+              }
+            },
+            "400":{
+              "description":"Email already exists",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref":"#/components/schema/error",
+                    "example": {
+                      "error": "Email already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/{user_id}":{
+        "get":{
+          "tags":["Show user profile"],
+          "summary":"Show user profile",
+          "description":"Show user profile",
+          "parameters":[{
+              "in":"path",
+              "name":"user_id",
+              "schema":{
+                "type": "string",
+                "format": "uuid",
+                "required":"true"
+              } 
+            }
+          ],
+          "responses":{
+            "200":{
+              "description":"Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref":"#/components/schema/responseUser"
+                  }
+                }
+              }
+            },
+            "404":{
+              "description":"User does not exists",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref":"#/components/schema/error",
+                    "example": {
+                      "error": "Email already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
